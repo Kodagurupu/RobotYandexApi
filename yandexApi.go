@@ -16,7 +16,7 @@ func main() {
 		if req.IsNewSession() {
 			return resp.Text("Здравствуйте")
 		}
-		return resp.Text(req.OriginalUtterance())
 		log.Printf("User send" + req.OriginalUtterance())
+		return resp.Text(req.OriginalUtterance())
 	})
 }
