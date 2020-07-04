@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	updates := alice.ListenForWebhook("/api/yandex")
+	updates := alice.ListenForWebhook("/")
 	go http.ListenAndServe(":3000", nil)
 
 	updates.Loop(func(k alice.Kit) *alice.Response {
