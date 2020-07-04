@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	updates := alice.ListenForWebhook("/")
-	go http.ListenAndServe(":3000", nil)
+	updates := alice.ListenForWebhook("/api/yandex")
+	go http.ListenAndServeTLS(":3000", "server.crt", "server.crt", nil)
 
 	updates.Loop(func(k alice.Kit) *alice.Response {
 		req, resp := k.Init()
