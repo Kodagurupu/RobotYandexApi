@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -16,6 +17,7 @@ func main() {
 		if req.IsNewSession() {
 			return resp.Text("Здравствуйте")
 		}
+		fmt.Printf("User send" + req.OriginalUtterance())
 		log.Printf("User send" + req.OriginalUtterance())
 		return resp.Text(req.OriginalUtterance())
 	})
