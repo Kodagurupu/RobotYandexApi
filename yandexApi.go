@@ -5,15 +5,22 @@ import (
 	"net/http"
 
 	"github.com/azzzak/alice"
+	"github.com/gorilla/mux"
 )
 
 func main() {
+
+	router := mux.NewRouter()
+	router.HandleFunc("/api/yandex", serve).Methods("POST")
+
 	updates := alice.ListenForWebhook("/")
 	go http.ListenAndServeTLS(":3000", "server.crt", "server.key", nil)
 
 	updates.Loop(func(k alice.Kit) *alice.Response {
 		req, resp := k.Init()
+
 		log.Printf("User send: " + req.OriginalUtterance())
+		requests = append(requests, req)
 
 		if req.IsNewSession() {
 			return resp.Text("Здравствуйте. " + firstMessage)

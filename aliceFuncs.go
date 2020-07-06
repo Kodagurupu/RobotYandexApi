@@ -13,6 +13,15 @@ func itemExists(array []string, item interface{}) bool {
 	return false
 }
 
+func searchIn(array []*alice.Request, item string) *alice.Request {
+	for _, value := range array {
+		if value.ClientID() == item {
+			return value
+		}
+	}
+	return nil
+}
+
 func helpFunction(response alice.Response) *alice.Response {
 	return response.Text(firstMessage)
 }
