@@ -11,7 +11,7 @@ import (
 func main() {
 
 	router := mux.NewRouter()
-	router.HandleFunc("/api/", serve).Methods("POST")
+	router.HandleFunc("/api/yandex", serve).Methods("POST")
 	updates := alice.ListenForWebhook("/")
 	go http.ListenAndServeTLS(":3000", "server.crt", "server.key", router)
 	http.ListenAndServe(":8080", router)
