@@ -14,7 +14,11 @@ func main() {
 	updates.Loop(func(k alice.Kit) *alice.Response {
 		req, resp := k.Init()
 		if req.IsNewSession() {
-			return resp.Text("Здравствуйте")
+			return resp.Text(firstMessage)
+		}
+
+		if req.Command() == "Помощь" {
+			helpFunction(*resp)
 		}
 
 		log.Printf("User send: " + req.OriginalUtterance())
