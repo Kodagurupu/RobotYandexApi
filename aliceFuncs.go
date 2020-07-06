@@ -1,14 +1,11 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/azzzak/alice"
 )
 
 func itemExists(array []string, item interface{}) bool {
-	fmt.Printf(array[0])
-	for value := range array {
+	for _, value := range array {
 		if value == item {
 			return true
 		}
