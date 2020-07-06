@@ -21,6 +21,8 @@ func main() {
 			return helpFunction(*resp)
 		} else if itemExists(abilityQuestions, req.Command()) {
 			return showPossibilities(*resp)
+		} else if itemExists(commands, req.Command()) {
+			return resp.Text("Выполняю")
 		} else {
 			return resp.Text("Не поняла вопроса, переформулируйте его, и повторите снова")
 		}
