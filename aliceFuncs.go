@@ -15,7 +15,7 @@ func itemExists(array []string, item interface{}) bool {
 
 func searchIn(array []*alice.Request, item string) *alice.Request {
 	for _, value := range array {
-		if value.ClientID() == item {
+		if value.UserID() == item {
 			return value
 		}
 	}
