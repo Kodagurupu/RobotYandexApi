@@ -54,7 +54,6 @@ func main() {
 		req, resp := k.Init()
 
 		log.Printf("User send: " + req.OriginalUtterance())
-		requests = append(requests, req)
 		file, err := os.OpenFile("Sessions/"+req.UserID(), os.O_RDWR|os.O_CREATE, 777)
 		if err != nil {
 			log.Fatalf("error opening file: %v", err)

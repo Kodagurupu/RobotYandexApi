@@ -1,9 +1,6 @@
 package main
 
-import "github.com/azzzak/alice"
-
 var (
-	requests         []*alice.Request
 	firstMessage     string   = "Для управления мной воспользуйтесь следующими коммандами: Вперед, Назад, На лево, На право."
 	possibilities    string   = "Вы можете управлять мной, или провести презентацию."
 	helpQuestions    []string = []string{"help", "Help", "Помощь", "помощь", "Инструкция", "инструкция", "Что делать?", "что делать?", "Что делать", "что делать"}
