@@ -13,19 +13,16 @@ func main() {
 
 	updates.Loop(func(k alice.Kit) *alice.Response {
 		req, resp := k.Init()
-		if req.IsNewSession() {
-			return resp.Text("Здравствуйте, " + firstMessage)
-		}
-
-		if req.Command() == "Помощь" {
-			helpFunction(*resp)
-		}
-
-		if req.Command() == "Что ты умеешь" {
-			showPossibilities(*resp)
-		}
-
 		log.Printf("User send: " + req.OriginalUtterance())
-		return resp.Text(req.OriginalUtterance())
+
+		if req.IsNewSession() {
+			return resp.Text("Здравствуйте. " + firstMessage)
+		} else if itemExists(helpQuestions, req.Command()) {
+			return helpFunction(*resp)
+		} else if itemExists(abilityQuestions, req.Command()) {
+			return showPossibilities(*resp)
+		} else {
+			return resp.Text("Не поняла вопроса, переформулируйте его, и повторите снова")
+		}
 	})
 }
