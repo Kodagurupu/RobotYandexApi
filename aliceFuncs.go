@@ -3,5 +3,9 @@ package main
 import "github.com/azzzak/alice"
 
 func helpFunction(response alice.Response) *alice.Response {
-	return response.Text("Для управления промороботом используйте следующие команды: Вперед, Назад, В лево, В право")
+	return response.Text(firstMessage)
+}
+
+func showPossibilities(response alice.Response) *alice.Response {
+	return response.Text(possibilities)
 }
