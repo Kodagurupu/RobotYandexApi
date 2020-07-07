@@ -54,13 +54,12 @@ func main() {
 		req, resp := k.Init()
 
 		log.Printf("User send: " + req.OriginalUtterance())
-		file, err := os.OpenFile("Sessions/"+req.UserID(), os.O_RDWR|os.O_CREATE, 777)
+		file, err := os.OpenFile("Sessions/"+req.UserID(), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 777)
 		if err != nil {
 			log.Fatalf("error opening file: %v", err)
 		}
 		marshaled, _ := json.Marshal(req)
 		file.WriteString(string(marshaled))
-		log.Printf(string(marshaled))
 		if req.IsNewSession() {
 			return resp.Text("Здравствуйте. " + firstMessage)
 		} else if itemExists(helpQuestions, req.Command()) {
