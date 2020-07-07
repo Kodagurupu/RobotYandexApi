@@ -60,8 +60,7 @@ func main() {
 		}
 		marshaled, _ := json.Marshal(req)
 		file.WriteString(string(marshaled))
-		log.Printf(string(req))
-		log.Printf(marshaled)
+		log.Printf(string(marshaled))
 		if req.IsNewSession() {
 			return resp.Text("Здравствуйте. " + firstMessage)
 		} else if itemExists(helpQuestions, req.Command()) {
