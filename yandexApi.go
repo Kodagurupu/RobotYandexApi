@@ -61,7 +61,7 @@ func main() {
 		marshaled, _ := json.Marshal(req)
 		file.WriteString(string(marshaled))
 		if req.IsNewSession() {
-			return resp.Text("Здравствуйте. " + firstMessage)
+			return resp.Text(firstMessage)
 		} else if itemExists(helpQuestions, req.Command()) {
 			return helpFunction(*resp)
 		} else if itemExists(abilityQuestions, req.Command()) {
