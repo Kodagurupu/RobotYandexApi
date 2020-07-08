@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/azzzak/alice"
@@ -35,5 +36,6 @@ func showPossibilities(response alice.Response) *alice.Response {
 func printCurrentTime(response alice.Response) *alice.Response {
 	hour, min, _ := time.Now().Clock()
 	year, mon, day := time.Now().Date()
+	fmt.Printf("Сегодня "+string(day)+","+string(mon), ","+string(year)+", Время: "+string(hour)+" часов "+string(min)+" минут ")
 	return response.Text("Сегодня "+string(day)+","+string(mon), ","+string(year)+", Время: "+string(hour)+" часов "+string(min)+" минут ")
 }
