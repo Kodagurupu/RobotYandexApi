@@ -37,6 +37,6 @@ func printCurrentTime(response alice.Response) *alice.Response {
 	hour, min, _ := time.Now().Clock()
 	year, mon, day := time.Now().Date()
 	var timestamp = "Сегодня " + string(day) + "," + string(mon) + "," + string(year) + ", Время: " + string(hour) + " часов " + string(min) + " минут "
-	fmt.Printf(timestamp)
+	fmt.Printf(timestamp, time.Now().String())
 	return response.Text(timestamp)
 }
