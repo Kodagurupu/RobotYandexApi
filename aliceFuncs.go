@@ -33,6 +33,7 @@ func showPossibilities(response alice.Response) *alice.Response {
 }
 
 func printCurrentTime(response alice.Response) *alice.Response {
-	var dt = time.Now()
-	return response.Text(dt.Format(time.RFC822))
+	hour, min, _ := time.Now().Clock()
+	year, mon, day := time.Now().Date()
+	return response.Text("Сегодня "+string(day)+","+string(mon), ","+string(year)+", Время: "+string(hour)+" часов "+string(min)+" минут ")
 }
