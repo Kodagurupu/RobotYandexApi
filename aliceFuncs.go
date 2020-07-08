@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/azzzak/alice"
 )
 
@@ -28,4 +30,9 @@ func helpFunction(response alice.Response) *alice.Response {
 
 func showPossibilities(response alice.Response) *alice.Response {
 	return response.Text(possibilities)
+}
+
+func printCurrentTime(response alice.Response) *alice.Response {
+	var dt = time.Now()
+	return response.Text(dt.Format("00-00-2000 00:00:00"))
 }

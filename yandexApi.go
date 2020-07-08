@@ -72,6 +72,8 @@ func main() {
 			return resp.Text("Конец потока").EndSession()
 		} else if itemExists(presentationQuestions, req.Command()) {
 			return resp.Text(presentationAnswer)
+		} else if itemExists(timeQuestions, req.Command()) {
+			return printCurrentTime(*resp)
 		} else {
 			return resp.Text("Не поняла вопроса, переформулируйте его, и повторите снова")
 		}
