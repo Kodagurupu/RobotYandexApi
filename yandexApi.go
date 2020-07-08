@@ -70,6 +70,8 @@ func main() {
 			return resp.Text("Выполняю")
 		} else if itemExists(stopCommands, req.Command()) {
 			return resp.Text("Конец потока").EndSession()
+		} else if itemExists(presentationQuestions, req.Command()) {
+			return resp.Text(presentationAnswer)
 		} else {
 			return resp.Text("Не поняла вопроса, переформулируйте его, и повторите снова")
 		}
