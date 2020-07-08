@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/azzzak/alice"
@@ -39,7 +40,7 @@ func printCurrentTime(response alice.Response) *alice.Response {
 	year := time.Now().Year()
 	mon := time.Now().Month()
 	day := time.Now().Day()
-	var timestamp = "Сегодня " + string(day) + "," + string(mon) + "," + string(year) + ", Время: " + string(hour) + " часов " + string(min) + " минут "
+	var timestamp = "Сегодня " + strconv.Itoa(day) + "," + strconv.Itoa(mon) + "," + strconv.Itoa(year) + ", Время: " + strconv.Itoa(hour) + " часов " + strconv.Itoa(min) + " минут "
 	fmt.Printf(timestamp, time.Now().String())
 	return response.Text(timestamp)
 }
