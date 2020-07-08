@@ -1,12 +1,31 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/azzzak/alice"
 )
+
+func checkfunc(req alice.Request, resp alice.Response) *alice.Response {
+	if req.IsNewSession() {
+		return resp.Text(firstMessage)
+	} else if itemExists(helpQuestions, req.Command()) {
+		return helpFunction(resp)
+	} else if itemExists(abilityQuestions, req.Command()) {
+		return showPossibilities(resp)
+	} else if itemExists(controllCommands, req.Command()) {
+		return resp.Text("Выполняю")
+	} else if itemExists(stopCommands, req.Command()) {
+		return resp.Text("Конец потока").EndSession()
+	} else if itemExists(presentationQuestions, req.Command()) {
+		return resp.Text(presentationAnswer)
+	} else if itemExists(timeQuestions, req.Command()) {
+		return printCurrentTime(resp)
+	} else {
+		return resp.Text("Не поняла вопроса, переформулируйте его, и повторите снова")
+	}
+}
 
 func itemExists(array []string, item interface{}) bool {
 	for _, value := range array {
@@ -40,7 +59,5 @@ func printCurrentTime(response alice.Response) *alice.Response {
 	year := time.Now().Year()
 	mon := time.Now().Month()
 	day := time.Now().Day()
-	var timestamp = "Сегодня " + strconv.Itoa(day) + "," + mon.String() + "," + strconv.Itoa(year) + ", Время: " + strconv.Itoa(hour) + " часов " + strconv.Itoa(min) + " минут "
-	fmt.Printf(timestamp, time.Now().String())
-	return response.Text(timestamp)
+	return response.Text("Сегодня " + strconv.Itoa(day) + "　," + mon.String() + ",　" + strconv.Itoa(year) + ". Время: " + strconv.Itoa(hour) + " часов " + strconv.Itoa(min) + " минут ")
 }
