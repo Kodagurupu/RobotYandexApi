@@ -59,5 +59,5 @@ func printCurrentTime(response alice.Response) *alice.Response {
 	year := time.Now().Year()
 	mon := time.Now().Month()
 	day := time.Now().Day()
-	return response.Text("Сегодня " + strconv.Itoa(day) + "　," + mon.String() + ",　" + strconv.Itoa(year) + ". Время: " + strconv.Itoa(hour) + " часов " + strconv.Itoa(min) + " минут ")
+	return response.Text("Сегодня " + strconv.Itoa(day) + ", " + mon.String() + ", " + strconv.Itoa(year) + ". Время: " + strconv.Itoa(hour) + " часов " + strconv.Itoa(min) + " минут ")
 }
