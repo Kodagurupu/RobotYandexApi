@@ -34,5 +34,5 @@ func showPossibilities(response alice.Response) *alice.Response {
 
 func printCurrentTime(response alice.Response) *alice.Response {
 	var dt = time.Now()
-	return response.Text(dt.Format("01-02-2006 15:04:05"))
+	return response.Text(dt.Format(time.RFC822))
 }
