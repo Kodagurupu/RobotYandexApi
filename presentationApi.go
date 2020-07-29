@@ -31,17 +31,20 @@ func showPresentation(id int, req alice.Request) {
 	workingDir := assetsFolder + "/" + preffix + "_" + strconv.Itoa(id)
 	sessionDir := "Sessions/" + strconv.Itoa(id)
 	data := openPresentation(id)
-	timer := time.NewTimer(time.Second * 1)
 	for _, currentAction := range data.Actions {
+		timer := time.NewTimer(time.Second * time.Duration(1))
 		defer timer.Stop()
-		go func() {
-			<-timer.C
-			if currentAction.Type == "read" {
+		if currentAction.Type == "read" {
+			go func() {
+				<-timer.C
 				showText(workingDir, currentAction.Args)
-			} else if currentAction.Type == "showImage" {
+			}()
+		} else if currentAction.Type == "showImage" {
+			go func() {
+				<-timer.C
 				showImage(workingDir+"images/"+currentAction.Args, sessionDir+"img.png")
-			}
-		}()
+			}()
+		}
 
 	}
 }
@@ -63,8 +66,8 @@ func returnResponce(id int) (string, string) {
 	var tts string
 	for _, currentAction := range data.Actions {
 		if currentAction.Type == "read" {
-			responce = responce + currentAction.Args
-			tts = tts + currentAction.Args + "sil <[1000]>"
+			responce = responce + "\n" + currentAction.Args
+			tts = tts + currentAction.Args + " sil <[1000]> "
 		}
 	}
 	return responce, tts
