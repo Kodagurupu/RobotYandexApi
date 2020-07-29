@@ -20,7 +20,7 @@ func main() {
 		} else {
 			configureUser(req.UserID())
 		}
-		file, err := os.OpenFile("Sessions/"+req.UserID()+"responce.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 757)
+		file, err := os.OpenFile("Sessions/"+req.UserID()+"/responce.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 757)
 		if err != nil {
 			log.Fatalf("error opening file: %v", err)
 			return checkfunc(*req, *resp)

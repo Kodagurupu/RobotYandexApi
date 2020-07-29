@@ -37,8 +37,8 @@ func showPresentation(id int) {
 
 func openPresentation(id int) Presentation {
 	var presentation Presentation
-	var workingDir string = assetsFolder + preffix + strconv.Itoa(id)
-	presentationFile, err := os.Open(workingDir + "data.json")
+	var workingDir string = assetsFolder + "/" + preffix + "_" + strconv.Itoa(id)
+	presentationFile, err := os.Open(workingDir + "/data.json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,13 +48,15 @@ func openPresentation(id int) Presentation {
 	return presentation
 }
 
-func returnResponce(id int) string {
+func returnResponce(id int) (string, string) {
 	data := openPresentation(id)
 	var responce string
+	var tts string
 	for _, currentAction := range data.Actions {
 		if currentAction.Type == "read" {
-			responce = responce + currentAction.Args + "sil <[1000]>"
+			responce = responce + currentAction.Args
+			tts = tts + currentAction.Args + "sil <[1000]>"
 		}
 	}
-	return responce
+	return responce, tts
 }

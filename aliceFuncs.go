@@ -20,7 +20,8 @@ func checkfunc(req alice.Request, resp alice.Response) *alice.Response {
 		return resp.Text("Конец потока").EndSession()
 	} else if itemExists(presentationQuestions, req.Command()) {
 		showPresentation(1)
-		return resp.Text(returnResponce(1))
+		text, tts := returnResponce(1)
+		return resp.Text(text).TTS(tts)
 	} else if itemExists(timeQuestions, req.Command()) {
 		return printCurrentTime(resp)
 	} else {
