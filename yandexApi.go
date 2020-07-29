@@ -9,6 +9,29 @@ import (
 	"github.com/azzzak/alice"
 )
 
+func main() {
+	updates := alice.ListenForWebhook("/")
+	go http.ListenAndServeTLS(":3000", "server.crt", "server.key", nil)
+
+	updates.Loop(func(k alice.Kit) *alice.Response {
+		req, resp := k.Init()
+		if !req.IsNewSession() {
+			log.Printf("User send: " + req.OriginalUtterance())
+		} else {
+			configureUser(req.UserID())
+		}
+		file, err := os.OpenFile("Sessions/"+req.UserID()+"responce.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 757)
+		if err != nil {
+			log.Fatalf("error opening file: %v", err)
+			return checkfunc(*req, *resp)
+		} else {
+			marshaled, _ := json.Marshal(req)
+			file.WriteString(string(marshaled))
+			return checkfunc(*req, *resp)
+		}
+	})
+}
+
 func fileExists(filename string) bool {
 
 	info, err := os.Stat(filename)
@@ -46,23 +69,8 @@ func init() {
 	createDirectory("Sessions")
 }
 
-func main() {
-	updates := alice.ListenForWebhook("/")
-	go http.ListenAndServeTLS(":3000", "server.crt", "server.key", nil)
-
-	updates.Loop(func(k alice.Kit) *alice.Response {
-		req, resp := k.Init()
-		if !req.IsNewSession() {
-			log.Printf("User send: " + req.OriginalUtterance())
-		}
-		file, err := os.OpenFile("Sessions/"+req.UserID(), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 777)
-		if err != nil {
-			log.Fatalf("error opening file: %v", err)
-			return checkfunc(*req, *resp)
-		} else {
-			marshaled, _ := json.Marshal(req)
-			file.WriteString(string(marshaled))
-			return checkfunc(*req, *resp)
-		}
-	})
+func configureUser(userID string) {
+	if !fileExists("Sessions/" + userID) {
+		createDirectory("Sessions/" + userID)
+	}
 }

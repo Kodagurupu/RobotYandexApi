@@ -19,7 +19,8 @@ func checkfunc(req alice.Request, resp alice.Response) *alice.Response {
 	} else if itemExists(stopCommands, req.Command()) {
 		return resp.Text("Конец потока").EndSession()
 	} else if itemExists(presentationQuestions, req.Command()) {
-		return resp.Text(presentationAnswer)
+		showPresentation(1)
+		return resp.Text(returnResponce(1))
 	} else if itemExists(timeQuestions, req.Command()) {
 		return printCurrentTime(resp)
 	} else {
