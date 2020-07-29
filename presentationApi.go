@@ -6,6 +6,9 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
+
+	"github.com/azzzak/alice"
 )
 
 type Presentation struct {
@@ -24,14 +27,22 @@ var (
 	preffix      string = "presentation"
 )
 
-func showPresentation(id int) {
+func showPresentation(id int, req alice.Request) {
+	workingDir := assetsFolder + "/" + preffix + "_" + strconv.Itoa(id)
+	sessionDir := "Sessions/" + strconv.Itoa(id)
 	data := openPresentation(id)
+	timer := time.NewTimer(time.Second * 1)
 	for _, currentAction := range data.Actions {
-		if currentAction.Type == "read" {
+		defer timer.Stop()
+		go func() {
+			<-timer.C
+			if currentAction.Type == "read" {
+				showText(workingDir, currentAction.Args)
+			} else if currentAction.Type == "showImage" {
+				showImage(workingDir+"images/"+currentAction.Args, sessionDir+"img.png")
+			}
+		}()
 
-		} else if currentAction.Type == "showImage" {
-
-		}
 	}
 }
 
@@ -39,9 +50,7 @@ func openPresentation(id int) Presentation {
 	var presentation Presentation
 	var workingDir string = assetsFolder + "/" + preffix + "_" + strconv.Itoa(id)
 	presentationFile, err := os.Open(workingDir + "/data.json")
-	if err != nil {
-		log.Fatal(err)
-	}
+	errCheck(err)
 	defer presentationFile.Close()
 	presentationData, _ := ioutil.ReadAll(presentationFile)
 	json.Unmarshal([]byte(presentationData), &presentation)
@@ -59,4 +68,24 @@ func returnResponce(id int) (string, string) {
 		}
 	}
 	return responce, tts
+}
+
+func showImage(assetsFile string, imgFile string) {
+	data, err := ioutil.ReadFile(assetsFile)
+	errCheck(err)
+	err = ioutil.WriteFile(imgFile, data, 755)
+
+}
+
+func showText(textFile string, text string) {
+	file, err := os.OpenFile(textFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 757)
+	errCheck(err)
+	file.WriteString(text)
+	errCheck(err)
+}
+
+func errCheck(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }
