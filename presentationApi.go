@@ -32,18 +32,17 @@ func showPresentation(id int, req alice.Request) {
 	sessionDir := "Sessions/" + strconv.Itoa(id)
 	data := openPresentation(id)
 	for _, currentAction := range data.Actions {
-		timer := time.NewTimer(time.Second * time.Duration(1))
-		defer timer.Stop()
+		log.Printf(currentAction.Type)
 		if currentAction.Type == "read" {
-			go func() {
-				<-timer.C
-				showText(workingDir, currentAction.Args)
-			}()
+			timer := time.AfterFunc(time.Second, func() {
+				showText(workingDir+"/text.txt", currentAction.Args)
+			})
+			defer timer.Stop()
 		} else if currentAction.Type == "showImage" {
-			go func() {
-				<-timer.C
-				showImage(workingDir+"images/"+currentAction.Args, sessionDir+"img.png")
-			}()
+			timer := time.AfterFunc(time.Second, func() {
+				showImage(workingDir+"images/"+currentAction.Args, sessionDir+"/img.png")
+			})
+			defer timer.Stop()
 		}
 
 	}
@@ -77,7 +76,6 @@ func showImage(assetsFile string, imgFile string) {
 	data, err := ioutil.ReadFile(assetsFile)
 	errCheck(err)
 	err = ioutil.WriteFile(imgFile, data, 755)
-
 }
 
 func showText(textFile string, text string) {
