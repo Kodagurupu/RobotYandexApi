@@ -33,16 +33,18 @@ func showPresentation(id int, req alice.Request) {
 	sessionDir := "Sessions/" + strconv.Itoa(id)
 	data := openPresentation(id)
 	for _, currentAction := range data.Actions {
+		timer := time.NewTimer(1)
+		defer timer.Stop()
 		if currentAction.Type == "read" {
-			timer := time.AfterFunc(time.Second, func() {
+			go func() {
+				<-timer.C
 				showText(workingDir+"/text.txt", currentAction.Args)
-			})
-			defer timer.Stop()
+			}()
 		} else if currentAction.Type == "showImage" {
-			timer := time.AfterFunc(time.Second, func() {
+			go func() {
+				<-timer.C
 				showImage(workingDir+"images/"+currentAction.Args, sessionDir+"/img.png")
-			})
-			defer timer.Stop()
+			}()
 		}
 		time.Sleep(time.Duration(currentAction.Time))
 	}
