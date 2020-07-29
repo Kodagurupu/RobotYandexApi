@@ -20,6 +20,7 @@ type Presentation struct {
 type action struct {
 	Type string `json:type`
 	Args string `json:args`
+	Time int    `json:time`
 }
 
 var (
@@ -32,7 +33,6 @@ func showPresentation(id int, req alice.Request) {
 	sessionDir := "Sessions/" + strconv.Itoa(id)
 	data := openPresentation(id)
 	for _, currentAction := range data.Actions {
-		log.Printf(currentAction.Type)
 		if currentAction.Type == "read" {
 			timer := time.AfterFunc(time.Second, func() {
 				showText(workingDir+"/text.txt", currentAction.Args)
@@ -44,7 +44,7 @@ func showPresentation(id int, req alice.Request) {
 			})
 			defer timer.Stop()
 		}
-
+		time.Sleep(time.Duration(currentAction.Time))
 	}
 }
 
@@ -66,7 +66,7 @@ func returnResponce(id int) (string, string) {
 	for _, currentAction := range data.Actions {
 		if currentAction.Type == "read" {
 			responce = responce + "\n" + currentAction.Args
-			tts = tts + currentAction.Args + " sil <[1000]> "
+			tts = tts + currentAction.Args + " sil <[" + strconv.Itoa(currentAction.Time) + "]> "
 		}
 	}
 	return responce, tts
