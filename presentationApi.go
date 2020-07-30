@@ -30,23 +30,24 @@ var (
 
 func showPresentation(id int, req alice.Request) {
 	workingDir := assetsFolder + "/" + preffix + "_" + strconv.Itoa(id)
-	sessionDir := "Sessions/" + strconv.Itoa(id)
+	sessionDir := "Sessions/" + req.UserID()
 	data := openPresentation(id)
-	for _, currentAction := range data.Actions {
-		timer := time.NewTimer(1)
-		defer timer.Stop()
+	for index, currentAction := range data.Actions {
+		timer := time.NewTimer(time.Second*time.Duration(index*2) + time.Millisecond*time.Duration(index*100))
+		log.Println(index * 2 * 1000)
 		if currentAction.Type == "read" {
-			go func() {
+			go func(sessionDir string, currentAction action) {
 				<-timer.C
-				showText(workingDir+"/text.txt", currentAction.Args)
-			}()
+				log.Println(currentAction.Type, currentAction.Args)
+				showText(sessionDir+"/text.txt", currentAction.Args)
+			}(sessionDir, currentAction)
 		} else if currentAction.Type == "showImage" {
-			go func() {
+			go func(workingDir string, currentAction action, sesssessionDir string) {
 				<-timer.C
-				showImage(workingDir+"images/"+currentAction.Args, sessionDir+"/img.png")
-			}()
+				log.Println(currentAction.Type, currentAction.Args)
+				showImage(workingDir+"/images/"+currentAction.Args, sessionDir+"/img.png")
+			}(workingDir, currentAction, sessionDir)
 		}
-		time.Sleep(time.Duration(currentAction.Time))
 	}
 }
 
@@ -65,10 +66,20 @@ func returnResponce(id int) (string, string) {
 	data := openPresentation(id)
 	var responce string
 	var tts string
-	for _, currentAction := range data.Actions {
+	for index, currentAction := range data.Actions {
+		var await int
+		if index == 0 {
+			await = 0
+		} else if index+1 != len(data.Actions) {
+			await = 2000
+		} else {
+			await = 0
+		}
 		if currentAction.Type == "read" {
 			responce = responce + "\n" + currentAction.Args
-			tts = tts + currentAction.Args + " sil <[" + strconv.Itoa(currentAction.Time) + "]> "
+			tts = tts + currentAction.Args + " sil <[" + strconv.Itoa(await) + "]> "
+		} else {
+			tts = tts + " sil <[" + strconv.Itoa(await) + "]> "
 		}
 	}
 	return responce, tts
@@ -77,7 +88,11 @@ func returnResponce(id int) (string, string) {
 func showImage(assetsFile string, imgFile string) {
 	data, err := ioutil.ReadFile(assetsFile)
 	errCheck(err)
+	if fileExists(imgFile) {
+		os.Remove(imgFile)
+	}
 	err = ioutil.WriteFile(imgFile, data, 755)
+	errCheck(err)
 }
 
 func showText(textFile string, text string) {
