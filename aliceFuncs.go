@@ -24,6 +24,17 @@ func checkfunc(req alice.Request, resp alice.Response) *alice.Response {
 		return resp.Text(text).TTS(tts)
 	} else if itemExists(timeQuestions, req.Command()) {
 		return printCurrentTime(resp)
+	} else if req.Command() == "ня" {
+		go func() *alice.Response {
+			return resp.Text("test1")
+		}()
+		go func() *alice.Response {
+			return resp.Text("test2")
+		}()
+		go func() *alice.Response {
+			return resp.Text("test3")
+		}()
+		return resp.Text("test0")
 	} else {
 		return resp.Text("Не поняла вопроса, переформулируйте его, и повторите снова")
 	}
